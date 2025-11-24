@@ -69,7 +69,6 @@ Options:
   -n, -ns        Comma list of resolvers
   -D, -dict      Wordlist for brute force
   -T, -threads   Concurrency level
-  -acfikpqsz     Bundle bools: -a -c -f -i -k -p -q -s -z
   -p, -tcp       Force TCP
   -f, -wildcard  Drop wildcard IPs during brute force
   -i, -ignore    Continue brute force when wildcard DNS is present
