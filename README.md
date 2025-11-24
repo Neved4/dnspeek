@@ -84,8 +84,7 @@ Options:
 
 ### Configuration
 
-Wordlists live in `data/`. Set `DNSPEEK_DATA` to point at a custom directory if
-you do not want to use the bundled files.
+Wordlists live in `data/`. Set `DNSPEEK_DATA` to use a custom directory.
 
 ### Examples
 
