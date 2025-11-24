@@ -25,7 +25,7 @@ while keeping results easy to review.
 ## Features
 
 - **~72x faster** than [dnsrecon](https://github.com/darkoperator/dnsrecon) in
-  std scans (google.com, hyperfine).
+  standard scans (google.com, hyperfine).
 - General enum (SOA, NS, MX, A/AAAA, TXT/SPF, CAA, SRV) with optional AXFR, SPF
   expansion, crt.sh names, and DNSSEC NSEC walk.
 - Brute force hosts from `data/namelist.txt`, with wildcard-aware filtering.
@@ -120,7 +120,7 @@ Example invocations for standard, brute, and reverse runs:
 
 ## Benchmarks
 
-dnspeek is ~72x faster than dnsrecon on `google.com` std scans (timeout 2s,
+dnspeek is ~72x faster than dnsrecon on `google.com` standard scans (timeout 2s,
 threads 5).
 
 Results (hyperfine):
