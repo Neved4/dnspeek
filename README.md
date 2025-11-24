@@ -3,16 +3,14 @@
 	<a href="#features">Features</a> •
 	<a href="#getting-started">Getting Started</a> •
 	<a href="#usage">Usage</a> •
-	<a href="#examples">Examples</a> •
 	<a href="#benchmarks">Benchmarks</a> •
-	<a href="#contributing">Contributing</a> •
 	<a href="#credits">Credits</a> •
 	<a href="#license">License</a>
 </p>
 
 ---
 
-[dnspeek](https://github.com/Neved4/dnspeek) is a Go DNS reconnaissance CLI
+[dnspeek] is a Go DNS reconnaissance CLI
 built for clear output and sensible defaults. It handles general enumeration,
 brute force, reverse sweeps, SRV/TLD probes, AXFR attempts, and DNSSEC walks
 while keeping results easy to review.
@@ -24,8 +22,7 @@ while keeping results easy to review.
 
 ## Features
 
-- **~72x faster** than [dnsrecon](https://github.com/darkoperator/dnsrecon) in
-  standard scans (google.com, hyperfine).
+- Equivalent [dnsrecon] feature set and **~72x faster**, in standard scans.
 - General enum (SOA, NS, MX, A/AAAA, TXT/SPF, CAA, SRV) with optional AXFR, SPF
   expansion, crt.sh names, and DNSSEC NSEC walk.
 - Brute force hosts from `data/namelist.txt`, with wildcard-aware filtering.
@@ -119,8 +116,8 @@ Example invocations for standard, brute, and reverse runs:
 
 ## Benchmarks
 
-dnspeek is ~72x faster than dnsrecon on `google.com` standard scans (timeout 2s,
-threads 5).
+[dnspeek] is ~72x faster than [dnsrecon] on `google.com` standard scans
+(timeout 2s, threads 5).
 
 Results:
 
@@ -136,17 +133,15 @@ hyperfine 'dnspeek -d google.com -t std -w 2 -T 5 -C' \
 	'dnsrecon -d google.com -t std --lifetime 2 --threads 5'
 ```
 
-## Contributing
-
-Issues and PRs are welcome. Please run `gofmt` and `go test ./...` before
-submitting changes.
-
 ## Credits
 
-Original script idea: [dnsrecon](https://github.com/darkoperator/dnsrecon)
+Shout out to [dnsrecon], the OG inspo.
 
 ## License
 
 This repository is licensed under the terms of the [MIT License](LICENSE).
 
 See the [LICENSE](LICENSE) file for details.
+
+[dnspeek]: https://github.com/Neved4/dnspeek
+[dnsrecon]: https://github.com/darkoperator/dnsrecon
