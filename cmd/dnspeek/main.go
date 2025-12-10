@@ -15,25 +15,24 @@ import (
 const usageText = `usage: dnspeek -d <name> [-acfikpqsz] [-r <cidr|start-end>]
   [-t <type>] [-n <servers>] [-D <file>] [-T <num>] [-w <seconds>] [-C]
 
-Flags (short and long):
-  -acfikpqsz  Bundle bools in sorted order.
-  -d, --domain  Target domain (required for most scans).
-  -r, --range  CIDR or start-end for reverse lookups.
-  -t, --type  std|brt|srv|tld|rvl|axfr|cache|zonewalk.
-  -n, --ns    Comma list of resolvers.
-  -D, --dict  Wordlist for brute force.
-  -T, --threads  Concurrency level.
-  -p, --tcp  Force TCP.
-  -f, --wildcard  Drop wildcard IPs during brute force.
-  -i, --ignore  Continue brute force when wildcards exist.
-  -s, --spf  Reverse ranges seen in SPF during std scans.
-  -z, --zone  Attempt DNSSEC NSEC walk during std scans.
-  -q, --caa  Query CAA records during std scans.
-  -c, --cache  Run cache snooping.
-  -k, --crt  Scrape crt.sh during std scans.
-  -a, --axfr  Try zone transfer in std scans.
-  -w, --timeout  Per-query timeout in seconds.
-  -C, --no-color  Disable ANSI colors.
+Flags (short, long, and -long aliases):
+  -d, -domain    Target domain (required for most scans).
+  -r, -range     CIDR or start-end for reverse lookups.
+  -t, -type      std|brt|srv|tld|rvl|axfr|cache|zonewalk.
+  -n, -ns        Comma list of resolvers.
+  -D, -dict      Wordlist for brute force.
+  -T, -threads   Concurrency level.
+  -p, -tcp       Force TCP.
+  -f, -wildcard  Drop wildcard IPs during brute force.
+  -i, -ignore    Continue brute force when wildcards exist.
+  -s, -spf       Reverse ranges seen in SPF during std scans.
+  -z, -zone      Attempt DNSSEC NSEC walk during std scans.
+  -q, -caa       Query CAA records during std scans.
+  -c, -cache     Run cache snooping.
+  -k, -crt       Scrape crt.sh during std scans.
+  -a, -axfr      Try zone transfer in std scans.
+  -w, -timeout   Per-query timeout in seconds.
+  -C, -no-color  Disable ANSI colors.
 `
 
 func main() {
