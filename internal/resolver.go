@@ -623,5 +623,5 @@ func EnvDataDir() string {
 	if custom := os.Getenv("DNSPEEK_DATA"); custom != "" {
 		return custom
 	}
-	return "data"
+	return "test"
 }

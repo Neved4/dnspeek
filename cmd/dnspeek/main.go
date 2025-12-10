@@ -81,7 +81,7 @@ func main() {
 		},
 		{
 			"c", "cache", &cfg.DoCacheSnoop, false,
-			"Check NS caches using data/snoop.txt.",
+			"Check NS caches using test/snoop.txt.",
 		},
 		{
 			"k", "crt", &cfg.DoCRT, false,

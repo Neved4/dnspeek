@@ -85,7 +85,7 @@ seconds.
 
 ### Configuration
 
-Wordlists live in `data/`. Set `DNSPEEK_DATA` to use a custom directory.
+Wordlists live in `test/`. Set `DNSPEEK_DATA` to use a custom directory.
 
 ### Examples
 
@@ -112,11 +112,11 @@ Example invocations for standard, brute, and reverse runs:
 
 - **All scan types enabled:**
 
-  ```sh
-  dnspeek -d 'google.com' -r '192.0.2.0/29' -acfikpqsz \
-  	-t 'std,brt,srv,tld,rvl,cache,zonewalk' \
-  	-D 'data/namelist.txt' -n '1.1.1.1,8.8.8.8' -T '64' -w '5'
-  ```
+ ```sh
+ dnspeek -d 'google.com' -r '192.0.2.0/29' -acfikpqsz \
+ 	-t 'std,brt,srv,tld,rvl,cache,zonewalk' \
+  	-D 'test/namelist.txt' -n '1.1.1.1,8.8.8.8' -T '64' -w '5'
+ ```
 
 ## Benchmarks
 

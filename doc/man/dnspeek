@@ -68,18 +68,18 @@ Per-query seconds (default 5.0).
 Disable ANSI colors in output.
 .El
 .Sh FILES
-.Bl -tag -width "data/snoop.txt"
-.It Pa data/namelist.txt
+.Bl -tag -width "test/snoop.txt"
+.It Pa test/namelist.txt
 Default brute force wordlist.
-.It Pa data/snoop.txt
+.It Pa test/snoop.txt
 Names used for cache snooping.
-.It Pa data/subdomains-top1mil*.txt
+.It Pa test/subdomains-top1mil*.txt
 Alternate brute lists.
 .El
 .Sh ENVIRONMENT
 .Bl -tag -width "DNSPEEK_DATA"
 .It Ev DNSPEEK_DATA
-Override the directory containing data files.
+Override the directory containing wordlist files.
 .El
 .Sh EXAMPLES
 .Bd -literal -offset indent
