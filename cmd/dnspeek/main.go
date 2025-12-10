@@ -36,6 +36,12 @@ Flags (short, long, and -long aliases):
 	-C, -no-color	Disable ANSI colors.
 `
 
+const (
+	rangeHelp = "IP range for reverse lookups (CIDR or start-end)."
+	typeHelp  = "Scan types: std,brt,rvl,srv,tld,axfr,cache,zonewalk."
+	cacheHelp = "Check NS caches using test/snoop.txt."
+)
+
 func main() {
 	cfg := core.Config{}
 
@@ -224,127 +230,38 @@ func registerFlags(
 	typeFlag *string,
 	nsFlag *string,
 ) {
-	flag.StringVarP(
-		&cfg.Domain,
-		"domain",
-		"d",
-		"",
-		"Target domain to enumerate.",
-	)
-	flag.StringVarP(
-		&cfg.RangeArg,
-		"range",
-		"r",
-		"",
-		"IP range for reverse lookups (CIDR or start-end).",
-	)
-	flag.StringVarP(
-		&cfg.Dictionary,
-		"dict",
-		"D",
-		"namelist.txt",
-		"Wordlist for brute force.",
-	)
-	flag.StringVarP(
-		typeFlag,
-		"type",
-		"t",
-		"std",
-		"Scan types: std,brt,rvl,srv,tld,axfr,cache,zonewalk.",
-	)
-	flag.StringVarP(
-		nsFlag,
-		"ns",
-		"n",
-		"",
-		"Comma list of nameservers to use.",
-	)
+	flag.StringVarP(&cfg.Domain, "domain", "d", "",
+		"Target domain to enumerate.")
+	flag.StringVarP(&cfg.RangeArg, "range", "r", "", rangeHelp)
+	flag.StringVarP(&cfg.Dictionary, "dict", "D", "namelist.txt",
+		"Wordlist for brute force.")
+	flag.StringVarP(typeFlag, "type", "t", "std", typeHelp)
+	flag.StringVarP(nsFlag, "ns", "n", "", "Comma list of nameservers to use.")
 
-	flag.BoolVarP(
-		&cfg.UseTCP,
-		"tcp",
-		"p",
-		false,
-		"Force TCP for DNS queries.",
-	)
-	flag.BoolVarP(
-		&cfg.FilterWildcard,
-		"wildcard",
-		"f",
-		false,
-		"Drop wildcard IPs during brute force.",
-	)
-	flag.BoolVarP(
-		&cfg.IgnoreWildcard,
-		"ignore",
-		"i",
-		false,
-		"Keep brute forcing even when wildcards exist.",
-	)
-	flag.BoolVarP(
-		&cfg.DoSPF,
-		"spf",
-		"s",
-		false,
-		"Reverse ranges seen in SPF during std scans.",
-	)
-	flag.BoolVarP(
-		&cfg.DoZoneWalk,
-		"zone",
-		"z",
-		false,
-		"Attempt DNSSEC NSEC walk during std scans.",
-	)
-	flag.BoolVarP(
-		&cfg.DoCAA,
-		"caa",
-		"q",
-		false,
-		"Query CAA records during std scans.",
-	)
-	flag.BoolVarP(
-		&cfg.DoCacheSnoop,
-		"cache",
-		"c",
-		false,
-		"Check NS caches using test/snoop.txt.",
-	)
-	flag.BoolVarP(
-		&cfg.DoCRT,
-		"crt",
-		"k",
-		false,
-		"Pull hostnames from crt.sh during std scans.",
-	)
-	flag.BoolVarP(
-		&cfg.DoAXFR,
-		"axfr",
-		"a",
-		false,
-		"Try zone transfer as part of std scans.",
-	)
-	flag.BoolVarP(
-		&cfg.NoColor,
-		"no-color",
-		"C",
-		false,
-		"Disable ANSI colors in output.",
-	)
+	flag.BoolVarP(&cfg.UseTCP, "tcp", "p", false,
+		"Force TCP for DNS queries.")
+	flag.BoolVarP(&cfg.FilterWildcard, "wildcard", "f", false,
+		"Drop wildcard IPs during brute force.")
+	flag.BoolVarP(&cfg.IgnoreWildcard, "ignore", "i", false,
+		"Keep brute forcing even when wildcards exist.")
+	flag.BoolVarP(&cfg.DoSPF, "spf", "s", false,
+		"Reverse ranges seen in SPF during std scans.")
+	flag.BoolVarP(&cfg.DoZoneWalk, "zone", "z", false,
+		"Attempt DNSSEC NSEC walk during std scans.")
+	flag.BoolVarP(&cfg.DoCAA, "caa", "q", false,
+		"Query CAA records during std scans.")
+	flag.BoolVarP(&cfg.DoCacheSnoop, "cache", "c", false, cacheHelp)
+	flag.BoolVarP(&cfg.DoCRT, "crt", "k", false,
+		"Pull hostnames from crt.sh during std scans.")
+	flag.BoolVarP(&cfg.DoAXFR, "axfr", "a", false,
+		"Try zone transfer as part of std scans.")
+	flag.BoolVarP(&cfg.NoColor, "no-color", "C", false,
+		"Disable ANSI colors in output.")
 
-	flag.IntVarP(
-		&cfg.ThreadCount,
-		"threads",
-		"T",
-		20,
-		"Concurrent lookups to perform.",
-	)
-	flag.Float64VarP(
-		&cfg.TimeoutSeconds,
-		"timeout",
-		"w",
-		5.0,
-		"Per-query timeout in seconds.",
-	)
+	flag.IntVarP(&cfg.ThreadCount, "threads", "T", 20,
+		"Concurrent lookups to perform.")
+	flag.Float64VarP(&cfg.TimeoutSeconds, "timeout", "w", 5.0,
+		"Per-query timeout in seconds.")
 }
 
 var singleDashLong = map[string]struct{}{
