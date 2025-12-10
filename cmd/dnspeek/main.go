@@ -18,125 +18,121 @@ func main() {
 	var typeFlag string
 	var nsFlag string
 
-	addString(
-		"d",
-		"domain",
-		&cfg.Domain,
-		"",
-		"Target domain to enumerate.",
-	)
-	addString(
-		"r",
-		"range",
-		&cfg.RangeArg,
-		"",
-		"IP range for reverse lookups (CIDR or start-end).",
-	)
-	addString(
-		"D",
-		"dict",
-		&cfg.Dictionary,
-		"namelist.txt",
-		"Wordlist for brute force.",
-	)
-	addString(
-		"t",
-		"type",
-		&typeFlag,
-		"std",
-		"Scan types: std,brt,rvl,srv,tld,axfr,cache,zonewalk.",
-	)
-	addString(
-		"n",
-		"ns",
-		&nsFlag,
-		"",
-		"Comma list of nameservers to use.",
-	)
-	addBool(
-		"p",
-		"tcp",
-		&cfg.UseTCP,
-		false,
-		"Force TCP for DNS queries.",
-	)
-	addBool(
-		"f",
-		"wildcard",
-		&cfg.FilterWildcard,
-		false,
-		"Drop wildcard IPs during brute force.",
-	)
-	addBool(
-		"i",
-		"ignore",
-		&cfg.IgnoreWildcard,
-		false,
-		"Keep brute forcing even when wildcards are present.",
-	)
-	addBool(
-		"s",
-		"spf",
-		&cfg.DoSPF,
-		false,
-		"Reverse ranges seen in SPF during std scans.",
-	)
-	addBool(
-		"z",
-		"zone",
-		&cfg.DoZoneWalk,
-		false,
-		"Attempt DNSSEC NSEC walk during std scans.",
-	)
-	addBool(
-		"q",
-		"caa",
-		&cfg.DoCAA,
-		false,
-		"Query CAA records during std scans.",
-	)
-	addBool(
-		"c",
-		"cache",
-		&cfg.DoCacheSnoop,
-		false,
-		"Check NS caches using data/snoop.txt.",
-	)
-	addBool(
-		"k",
-		"crt",
-		&cfg.DoCRT,
-		false,
-		"Pull hostnames from crt.sh during std scans.",
-	)
-	addBool(
-		"a",
-		"axfr",
-		&cfg.DoAXFR,
-		false,
-		"Try zone transfer as part of std scans.",
-	)
-	addInt(
-		"T",
-		"threads",
-		&cfg.ThreadCount,
-		20,
-		"Concurrent lookups to perform.",
-	)
-	addFloat(
-		"w",
-		"timeout",
-		&cfg.TimeoutSeconds,
-		5.0,
-		"Per-query timeout in seconds.",
-	)
-	addBool(
-		"C",
-		"no-color",
-		&cfg.NoColor,
-		false,
-		"Disable ANSI colors in output.",
-	)
+	stringFlags := []struct {
+		short string
+		long  string
+		dest  *string
+		def   string
+		usage string
+	}{
+		{
+			"d", "domain", &cfg.Domain, "",
+			"Target domain to enumerate.",
+		},
+		{
+			"r", "range", &cfg.RangeArg, "",
+			"IP range for reverse lookups " +
+				"(CIDR or start-end).",
+		},
+		{
+			"D", "dict", &cfg.Dictionary, "namelist.txt",
+			"Wordlist for brute force.",
+		},
+		{
+			"t", "type", &typeFlag, "std",
+			"Scan types: " +
+				"std,brt,rvl,srv,tld,axfr,cache,zonewalk.",
+		},
+		{
+			"n", "ns", &nsFlag, "",
+			"Comma list of nameservers to use.",
+		},
+	}
+	boolFlags := []struct {
+		short string
+		long  string
+		dest  *bool
+		def   bool
+		usage string
+	}{
+		{
+			"p", "tcp", &cfg.UseTCP, false,
+			"Force TCP for DNS queries.",
+		},
+		{
+			"f", "wildcard", &cfg.FilterWildcard, false,
+			"Drop wildcard IPs during brute force.",
+		},
+		{
+			"i", "ignore", &cfg.IgnoreWildcard, false,
+			"Keep brute forcing even when wildcards exist.",
+		},
+		{
+			"s", "spf", &cfg.DoSPF, false,
+			"Reverse ranges seen in SPF during std scans.",
+		},
+		{
+			"z", "zone", &cfg.DoZoneWalk, false,
+			"Attempt DNSSEC NSEC walk during std scans.",
+		},
+		{
+			"q", "caa", &cfg.DoCAA, false,
+			"Query CAA records during std scans.",
+		},
+		{
+			"c", "cache", &cfg.DoCacheSnoop, false,
+			"Check NS caches using data/snoop.txt.",
+		},
+		{
+			"k", "crt", &cfg.DoCRT, false,
+			"Pull hostnames from crt.sh during std scans.",
+		},
+		{
+			"a", "axfr", &cfg.DoAXFR, false,
+			"Try zone transfer as part of std scans.",
+		},
+		{
+			"C", "no-color", &cfg.NoColor, false,
+			"Disable ANSI colors in output.",
+		},
+	}
+	intFlags := []struct {
+		short string
+		long  string
+		dest  *int
+		def   int
+		usage string
+	}{
+		{
+			"T", "threads", &cfg.ThreadCount, 20,
+			"Concurrent lookups to perform.",
+		},
+	}
+	floatFlags := []struct {
+		short string
+		long  string
+		dest  *float64
+		def   float64
+		usage string
+	}{
+		{
+			"w", "timeout", &cfg.TimeoutSeconds, 5.0,
+			"Per-query timeout in seconds.",
+		},
+	}
+
+	for _, f := range stringFlags {
+		addString(f.short, f.long, f.dest, f.def, f.usage)
+	}
+	for _, f := range boolFlags {
+		addBool(f.short, f.long, f.dest, f.def, f.usage)
+	}
+	for _, f := range intFlags {
+		addInt(f.short, f.long, f.dest, f.def, f.usage)
+	}
+	for _, f := range floatFlags {
+		addFloat(f.short, f.long, f.dest, f.def, f.usage)
+	}
 
 	flag.Usage = func() {
 		fmt.Println(
