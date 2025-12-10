@@ -7,9 +7,8 @@ import (
 	"strings"
 	"time"
 
-	flag "github.com/spf13/pflag"
-
 	core "dnspeek/internal"
+	flag "github.com/spf13/pflag"
 )
 
 const usageText = `usage: dnspeek -d <name> [-acfikpqsz] [-r <cidr|start-end>]
