@@ -42,133 +42,7 @@ func main() {
 	var typeFlag string
 	var nsFlag string
 
-	flagBinds := []func(){
-		stringFlag(
-			"d",
-			"domain",
-			&cfg.Domain,
-			"",
-			"Target domain to enumerate.",
-		),
-		stringFlag(
-			"r",
-			"range",
-			&cfg.RangeArg,
-			"",
-			"IP range for reverse lookups "+
-				"(CIDR or start-end).",
-		),
-		stringFlag(
-			"D",
-			"dict",
-			&cfg.Dictionary,
-			"namelist.txt",
-			"Wordlist for brute force.",
-		),
-		stringFlag(
-			"t",
-			"type",
-			&typeFlag,
-			"std",
-			"Scan types: "+
-				"std,brt,rvl,srv,tld,axfr,cache,zonewalk.",
-		),
-		stringFlag(
-			"n",
-			"ns",
-			&nsFlag,
-			"",
-			"Comma list of nameservers to use.",
-		),
-		boolFlag(
-			"p",
-			"tcp",
-			&cfg.UseTCP,
-			false,
-			"Force TCP for DNS queries.",
-		),
-		boolFlag(
-			"f",
-			"wildcard",
-			&cfg.FilterWildcard,
-			false,
-			"Drop wildcard IPs during brute force.",
-		),
-		boolFlag(
-			"i",
-			"ignore",
-			&cfg.IgnoreWildcard,
-			false,
-			"Keep brute forcing even when wildcards exist.",
-		),
-		boolFlag(
-			"s",
-			"spf",
-			&cfg.DoSPF,
-			false,
-			"Reverse ranges seen in SPF during std scans.",
-		),
-		boolFlag(
-			"z",
-			"zone",
-			&cfg.DoZoneWalk,
-			false,
-			"Attempt DNSSEC NSEC walk during std scans.",
-		),
-		boolFlag(
-			"q",
-			"caa",
-			&cfg.DoCAA,
-			false,
-			"Query CAA records during std scans.",
-		),
-		boolFlag(
-			"c",
-			"cache",
-			&cfg.DoCacheSnoop,
-			false,
-			"Check NS caches using test/snoop.txt.",
-		),
-		boolFlag(
-			"k",
-			"crt",
-			&cfg.DoCRT,
-			false,
-			"Pull hostnames from crt.sh during std scans.",
-		),
-		boolFlag(
-			"a",
-			"axfr",
-			&cfg.DoAXFR,
-			false,
-			"Try zone transfer as part of std scans.",
-		),
-		boolFlag(
-			"C",
-			"no-color",
-			&cfg.NoColor,
-			false,
-			"Disable ANSI colors in output.",
-		),
-		intFlag(
-			"T",
-			"threads",
-			&cfg.ThreadCount,
-			20,
-			"Concurrent lookups to perform.",
-		),
-		floatFlag(
-			"w",
-			"timeout",
-			&cfg.TimeoutSeconds,
-			5.0,
-			"Per-query timeout in seconds.",
-		),
-	}
-
-	for _, bind := range flagBinds {
-		bind()
-	}
+	registerFlags(&cfg, &typeFlag, &nsFlag)
 
 	flag.Usage = func() {
 		fmt.Print(usageText)
@@ -345,6 +219,83 @@ func main() {
 	}
 }
 
+func registerFlags(
+	cfg *core.Config,
+	typeFlag *string,
+	nsFlag *string,
+) {
+	addString(
+		"d", "domain", &cfg.Domain, "",
+		"Target domain to enumerate.",
+	)
+	addString(
+		"r", "range", &cfg.RangeArg, "",
+		"IP range for reverse lookups (CIDR or start-end).",
+	)
+	addString(
+		"D", "dict", &cfg.Dictionary, "namelist.txt",
+		"Wordlist for brute force.",
+	)
+	addString(
+		"t", "type", typeFlag, "std",
+		"Scan types: std,brt,rvl,srv,tld,axfr,cache,zonewalk.",
+	)
+	addString(
+		"n", "ns", nsFlag, "",
+		"Comma list of nameservers to use.",
+	)
+
+	addBool(
+		"p", "tcp", &cfg.UseTCP, false,
+		"Force TCP for DNS queries.",
+	)
+	addBool(
+		"f", "wildcard", &cfg.FilterWildcard, false,
+		"Drop wildcard IPs during brute force.",
+	)
+	addBool(
+		"i", "ignore", &cfg.IgnoreWildcard, false,
+		"Keep brute forcing even when wildcards exist.",
+	)
+	addBool(
+		"s", "spf", &cfg.DoSPF, false,
+		"Reverse ranges seen in SPF during std scans.",
+	)
+	addBool(
+		"z", "zone", &cfg.DoZoneWalk, false,
+		"Attempt DNSSEC NSEC walk during std scans.",
+	)
+	addBool(
+		"q", "caa", &cfg.DoCAA, false,
+		"Query CAA records during std scans.",
+	)
+	addBool(
+		"c", "cache", &cfg.DoCacheSnoop, false,
+		"Check NS caches using test/snoop.txt.",
+	)
+	addBool(
+		"k", "crt", &cfg.DoCRT, false,
+		"Pull hostnames from crt.sh during std scans.",
+	)
+	addBool(
+		"a", "axfr", &cfg.DoAXFR, false,
+		"Try zone transfer as part of std scans.",
+	)
+	addBool(
+		"C", "no-color", &cfg.NoColor, false,
+		"Disable ANSI colors in output.",
+	)
+
+	addInt(
+		"T", "threads", &cfg.ThreadCount, 20,
+		"Concurrent lookups to perform.",
+	)
+	addFloat(
+		"w", "timeout", &cfg.TimeoutSeconds, 5.0,
+		"Per-query timeout in seconds.",
+	)
+}
+
 func addString(
 	shortName string,
 	longName string,
@@ -353,24 +304,6 @@ func addString(
 	usage string,
 ) {
 	flag.StringVarP(dest, longName, shortName, def, usage)
-}
-
-func stringFlag(
-	shortName string,
-	longName string,
-	dest *string,
-	def string,
-	usage string,
-) func() {
-	return func() {
-		addString(
-			shortName,
-			longName,
-			dest,
-			def,
-			usage,
-		)
-	}
 }
 
 func addBool(
@@ -383,24 +316,6 @@ func addBool(
 	flag.BoolVarP(dest, longName, shortName, def, usage)
 }
 
-func boolFlag(
-	shortName string,
-	longName string,
-	dest *bool,
-	def bool,
-	usage string,
-) func() {
-	return func() {
-		addBool(
-			shortName,
-			longName,
-			dest,
-			def,
-			usage,
-		)
-	}
-}
-
 func addInt(
 	shortName string,
 	longName string,
@@ -411,24 +326,6 @@ func addInt(
 	flag.IntVarP(dest, longName, shortName, def, usage)
 }
 
-func intFlag(
-	shortName string,
-	longName string,
-	dest *int,
-	def int,
-	usage string,
-) func() {
-	return func() {
-		addInt(
-			shortName,
-			longName,
-			dest,
-			def,
-			usage,
-		)
-	}
-}
-
 func addFloat(
 	shortName string,
 	longName string,
@@ -437,24 +334,6 @@ func addFloat(
 	usage string,
 ) {
 	flag.Float64VarP(dest, longName, shortName, def, usage)
-}
-
-func floatFlag(
-	shortName string,
-	longName string,
-	dest *float64,
-	def float64,
-	usage string,
-) func() {
-	return func() {
-		addFloat(
-			shortName,
-			longName,
-			dest,
-			def,
-			usage,
-		)
-	}
 }
 
 var singleDashLong = map[string]struct{}{
