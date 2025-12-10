@@ -97,128 +97,129 @@ func main() {
 		os.Exit(1)
 	}
 
+	runStdScan := func() {
+		if cfg.Domain == "" {
+			core.ErrLine("std scan requires --domain")
+			return
+		}
+		_, err := core.GeneralEnum(res, cfg.Domain, cfg)
+		if err != nil {
+			core.ErrLine(err.Error())
+		}
+	}
+
+	runBruteScan := func() {
+		if cfg.Domain == "" {
+			core.ErrLine("brt scan requires --domain")
+			return
+		}
+		_, err := core.BruteDomain(
+			res,
+			cfg.Dictionary,
+			cfg.Domain,
+			cfg.FilterWildcard,
+			cfg.IgnoreWildcard,
+			cfg.ThreadCount,
+		)
+		if err != nil {
+			core.ErrLine(err.Error())
+		}
+	}
+
+	runSrvScan := func() {
+		if cfg.Domain == "" {
+			core.ErrLine("srv scan requires --domain")
+			return
+		}
+		_, err := core.BruteSrv(res, cfg.Domain, cfg.ThreadCount)
+		if err != nil {
+			core.ErrLine(err.Error())
+		}
+	}
+
+	runTLDScan := func() {
+		if cfg.Domain == "" {
+			core.ErrLine("tld scan requires --domain")
+			return
+		}
+		_, err := core.BruteTLDs(res, cfg.Domain, cfg.ThreadCount)
+		if err != nil {
+			core.ErrLine(err.Error())
+		}
+	}
+
+	runReverseScan := func() {
+		if cfg.RangeArg == "" {
+			core.ErrLine("rvl scan requires --range")
+			return
+		}
+		ips, err := core.ParseRangeList(cfg.RangeArg)
+		if err != nil {
+			core.ErrLine(err.Error())
+			return
+		}
+		_, err = core.BruteReverse(res, ips, cfg.ThreadCount)
+		if err != nil {
+			core.ErrLine(err.Error())
+		}
+	}
+
+	runAXFRScan := func() {
+		if cfg.Domain == "" {
+			core.ErrLine("axfr scan requires --domain")
+			return
+		}
+		local := cfg
+		local.DoAXFR = true
+		_, err := core.GeneralEnum(res, cfg.Domain, local)
+		if err != nil {
+			core.ErrLine(err.Error())
+		}
+	}
+
+	runCacheScan := func() {
+		if len(res.Nameservers()) == 0 {
+			core.ErrLine("no nameservers available for cache snoop")
+			return
+		}
+		for _, ns := range res.Nameservers() {
+			path := filepath.Join(core.EnvDataDir(), "snoop.txt")
+			_, err := core.CacheSnoop(ns, path, timeout)
+			if err != nil {
+				core.ErrLine(err.Error())
+			}
+		}
+	}
+
+	runZoneWalkScan := func() {
+		if cfg.Domain == "" {
+			core.ErrLine("zonewalk requires --domain")
+			return
+		}
+		_, err := core.ZoneWalk(res, cfg.Domain, cfg.TimeoutSeconds)
+		if err != nil {
+			core.ErrLine(err.Error())
+		}
+	}
+
 	for _, t := range cfg.ScanTypes {
 		switch t {
 		case "std":
-			if cfg.Domain == "" {
-				core.ErrLine("std scan requires --domain")
-				continue
-			}
-			_, err := core.GeneralEnum(
-				res,
-				cfg.Domain,
-				cfg,
-			)
-			if err != nil {
-				core.ErrLine(err.Error())
-			}
+			runStdScan()
 		case "brt":
-			if cfg.Domain == "" {
-				core.ErrLine("brt scan requires --domain")
-				continue
-			}
-			_, err := core.BruteDomain(
-				res,
-				cfg.Dictionary,
-				cfg.Domain,
-				cfg.FilterWildcard,
-				cfg.IgnoreWildcard,
-				cfg.ThreadCount,
-			)
-			if err != nil {
-				core.ErrLine(err.Error())
-			}
+			runBruteScan()
 		case "srv":
-			if cfg.Domain == "" {
-				core.ErrLine("srv scan requires --domain")
-				continue
-			}
-			_, err := core.BruteSrv(
-				res,
-				cfg.Domain,
-				cfg.ThreadCount,
-			)
-			if err != nil {
-				core.ErrLine(err.Error())
-			}
+			runSrvScan()
 		case "tld":
-			if cfg.Domain == "" {
-				core.ErrLine("tld scan requires --domain")
-				continue
-			}
-			_, err := core.BruteTLDs(
-				res,
-				cfg.Domain,
-				cfg.ThreadCount,
-			)
-			if err != nil {
-				core.ErrLine(err.Error())
-			}
+			runTLDScan()
 		case "rvl":
-			if cfg.RangeArg == "" {
-				core.ErrLine("rvl scan requires --range")
-				continue
-			}
-			ips, err := core.ParseRangeList(cfg.RangeArg)
-			if err != nil {
-				core.ErrLine(err.Error())
-				continue
-			}
-			_, err = core.BruteReverse(
-				res,
-				ips,
-				cfg.ThreadCount,
-			)
-			if err != nil {
-				core.ErrLine(err.Error())
-			}
+			runReverseScan()
 		case "axfr":
-			if cfg.Domain == "" {
-				core.ErrLine("axfr scan requires --domain")
-				continue
-			}
-			local := cfg
-			local.DoAXFR = true
-			_, err := core.GeneralEnum(
-				res,
-				cfg.Domain,
-				local,
-			)
-			if err != nil {
-				core.ErrLine(err.Error())
-			}
+			runAXFRScan()
 		case "cache":
-			if len(res.Nameservers()) == 0 {
-				core.ErrLine("no nameservers available for cache snoop")
-				continue
-			}
-			for _, ns := range res.Nameservers() {
-				path := filepath.Join(
-					core.EnvDataDir(),
-					"snoop.txt",
-				)
-				_, err := core.CacheSnoop(
-					ns,
-					path,
-					timeout,
-				)
-				if err != nil {
-					core.ErrLine(err.Error())
-				}
-			}
+			runCacheScan()
 		case "zonewalk":
-			if cfg.Domain == "" {
-				core.ErrLine("zonewalk requires --domain")
-				continue
-			}
-			_, err := core.ZoneWalk(
-				res,
-				cfg.Domain,
-				cfg.TimeoutSeconds,
-			)
-			if err != nil {
-				core.ErrLine(err.Error())
-			}
+			runZoneWalkScan()
 		default:
 			core.WarnLine("unknown type: " + t)
 		}
