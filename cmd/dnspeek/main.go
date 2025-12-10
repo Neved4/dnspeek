@@ -42,120 +42,132 @@ func main() {
 	var typeFlag string
 	var nsFlag string
 
-	stringFlags := []struct {
-		short string
-		long  string
-		dest  *string
-		def   string
-		usage string
-	}{
-		{
-			"d", "domain", &cfg.Domain, "",
+	flagBinds := []func(){
+		stringFlag(
+			"d",
+			"domain",
+			&cfg.Domain,
+			"",
 			"Target domain to enumerate.",
-		},
-		{
-			"r", "range", &cfg.RangeArg, "",
-			"IP range for reverse lookups " +
+		),
+		stringFlag(
+			"r",
+			"range",
+			&cfg.RangeArg,
+			"",
+			"IP range for reverse lookups "+
 				"(CIDR or start-end).",
-		},
-		{
-			"D", "dict", &cfg.Dictionary, "namelist.txt",
+		),
+		stringFlag(
+			"D",
+			"dict",
+			&cfg.Dictionary,
+			"namelist.txt",
 			"Wordlist for brute force.",
-		},
-		{
-			"t", "type", &typeFlag, "std",
-			"Scan types: " +
+		),
+		stringFlag(
+			"t",
+			"type",
+			&typeFlag,
+			"std",
+			"Scan types: "+
 				"std,brt,rvl,srv,tld,axfr,cache,zonewalk.",
-		},
-		{
-			"n", "ns", &nsFlag, "",
+		),
+		stringFlag(
+			"n",
+			"ns",
+			&nsFlag,
+			"",
 			"Comma list of nameservers to use.",
-		},
-	}
-	boolFlags := []struct {
-		short string
-		long  string
-		dest  *bool
-		def   bool
-		usage string
-	}{
-		{
-			"p", "tcp", &cfg.UseTCP, false,
+		),
+		boolFlag(
+			"p",
+			"tcp",
+			&cfg.UseTCP,
+			false,
 			"Force TCP for DNS queries.",
-		},
-		{
-			"f", "wildcard", &cfg.FilterWildcard, false,
+		),
+		boolFlag(
+			"f",
+			"wildcard",
+			&cfg.FilterWildcard,
+			false,
 			"Drop wildcard IPs during brute force.",
-		},
-		{
-			"i", "ignore", &cfg.IgnoreWildcard, false,
+		),
+		boolFlag(
+			"i",
+			"ignore",
+			&cfg.IgnoreWildcard,
+			false,
 			"Keep brute forcing even when wildcards exist.",
-		},
-		{
-			"s", "spf", &cfg.DoSPF, false,
+		),
+		boolFlag(
+			"s",
+			"spf",
+			&cfg.DoSPF,
+			false,
 			"Reverse ranges seen in SPF during std scans.",
-		},
-		{
-			"z", "zone", &cfg.DoZoneWalk, false,
+		),
+		boolFlag(
+			"z",
+			"zone",
+			&cfg.DoZoneWalk,
+			false,
 			"Attempt DNSSEC NSEC walk during std scans.",
-		},
-		{
-			"q", "caa", &cfg.DoCAA, false,
+		),
+		boolFlag(
+			"q",
+			"caa",
+			&cfg.DoCAA,
+			false,
 			"Query CAA records during std scans.",
-		},
-		{
-			"c", "cache", &cfg.DoCacheSnoop, false,
+		),
+		boolFlag(
+			"c",
+			"cache",
+			&cfg.DoCacheSnoop,
+			false,
 			"Check NS caches using test/snoop.txt.",
-		},
-		{
-			"k", "crt", &cfg.DoCRT, false,
+		),
+		boolFlag(
+			"k",
+			"crt",
+			&cfg.DoCRT,
+			false,
 			"Pull hostnames from crt.sh during std scans.",
-		},
-		{
-			"a", "axfr", &cfg.DoAXFR, false,
+		),
+		boolFlag(
+			"a",
+			"axfr",
+			&cfg.DoAXFR,
+			false,
 			"Try zone transfer as part of std scans.",
-		},
-		{
-			"C", "no-color", &cfg.NoColor, false,
+		),
+		boolFlag(
+			"C",
+			"no-color",
+			&cfg.NoColor,
+			false,
 			"Disable ANSI colors in output.",
-		},
-	}
-	intFlags := []struct {
-		short string
-		long  string
-		dest  *int
-		def   int
-		usage string
-	}{
-		{
-			"T", "threads", &cfg.ThreadCount, 20,
+		),
+		intFlag(
+			"T",
+			"threads",
+			&cfg.ThreadCount,
+			20,
 			"Concurrent lookups to perform.",
-		},
-	}
-	floatFlags := []struct {
-		short string
-		long  string
-		dest  *float64
-		def   float64
-		usage string
-	}{
-		{
-			"w", "timeout", &cfg.TimeoutSeconds, 5.0,
+		),
+		floatFlag(
+			"w",
+			"timeout",
+			&cfg.TimeoutSeconds,
+			5.0,
 			"Per-query timeout in seconds.",
-		},
+		),
 	}
 
-	for _, f := range stringFlags {
-		addString(f.short, f.long, f.dest, f.def, f.usage)
-	}
-	for _, f := range boolFlags {
-		addBool(f.short, f.long, f.dest, f.def, f.usage)
-	}
-	for _, f := range intFlags {
-		addInt(f.short, f.long, f.dest, f.def, f.usage)
-	}
-	for _, f := range floatFlags {
-		addFloat(f.short, f.long, f.dest, f.def, f.usage)
+	for _, bind := range flagBinds {
+		bind()
 	}
 
 	flag.Usage = func() {
@@ -343,6 +355,24 @@ func addString(
 	flag.StringVarP(dest, longName, shortName, def, usage)
 }
 
+func stringFlag(
+	shortName string,
+	longName string,
+	dest *string,
+	def string,
+	usage string,
+) func() {
+	return func() {
+		addString(
+			shortName,
+			longName,
+			dest,
+			def,
+			usage,
+		)
+	}
+}
+
 func addBool(
 	shortName string,
 	longName string,
@@ -351,6 +381,24 @@ func addBool(
 	usage string,
 ) {
 	flag.BoolVarP(dest, longName, shortName, def, usage)
+}
+
+func boolFlag(
+	shortName string,
+	longName string,
+	dest *bool,
+	def bool,
+	usage string,
+) func() {
+	return func() {
+		addBool(
+			shortName,
+			longName,
+			dest,
+			def,
+			usage,
+		)
+	}
 }
 
 func addInt(
@@ -363,6 +411,24 @@ func addInt(
 	flag.IntVarP(dest, longName, shortName, def, usage)
 }
 
+func intFlag(
+	shortName string,
+	longName string,
+	dest *int,
+	def int,
+	usage string,
+) func() {
+	return func() {
+		addInt(
+			shortName,
+			longName,
+			dest,
+			def,
+			usage,
+		)
+	}
+}
+
 func addFloat(
 	shortName string,
 	longName string,
@@ -371,6 +437,24 @@ func addFloat(
 	usage string,
 ) {
 	flag.Float64VarP(dest, longName, shortName, def, usage)
+}
+
+func floatFlag(
+	shortName string,
+	longName string,
+	dest *float64,
+	def float64,
+	usage string,
+) func() {
+	return func() {
+		addFloat(
+			shortName,
+			longName,
+			dest,
+			def,
+			usage,
+		)
+	}
 }
 
 var singleDashLong = map[string]struct{}{
