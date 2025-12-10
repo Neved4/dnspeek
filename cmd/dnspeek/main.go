@@ -224,116 +224,127 @@ func registerFlags(
 	typeFlag *string,
 	nsFlag *string,
 ) {
-	addString(
-		"d", "domain", &cfg.Domain, "",
+	flag.StringVarP(
+		&cfg.Domain,
+		"domain",
+		"d",
+		"",
 		"Target domain to enumerate.",
 	)
-	addString(
-		"r", "range", &cfg.RangeArg, "",
+	flag.StringVarP(
+		&cfg.RangeArg,
+		"range",
+		"r",
+		"",
 		"IP range for reverse lookups (CIDR or start-end).",
 	)
-	addString(
-		"D", "dict", &cfg.Dictionary, "namelist.txt",
+	flag.StringVarP(
+		&cfg.Dictionary,
+		"dict",
+		"D",
+		"namelist.txt",
 		"Wordlist for brute force.",
 	)
-	addString(
-		"t", "type", typeFlag, "std",
+	flag.StringVarP(
+		typeFlag,
+		"type",
+		"t",
+		"std",
 		"Scan types: std,brt,rvl,srv,tld,axfr,cache,zonewalk.",
 	)
-	addString(
-		"n", "ns", nsFlag, "",
+	flag.StringVarP(
+		nsFlag,
+		"ns",
+		"n",
+		"",
 		"Comma list of nameservers to use.",
 	)
 
-	addBool(
-		"p", "tcp", &cfg.UseTCP, false,
+	flag.BoolVarP(
+		&cfg.UseTCP,
+		"tcp",
+		"p",
+		false,
 		"Force TCP for DNS queries.",
 	)
-	addBool(
-		"f", "wildcard", &cfg.FilterWildcard, false,
+	flag.BoolVarP(
+		&cfg.FilterWildcard,
+		"wildcard",
+		"f",
+		false,
 		"Drop wildcard IPs during brute force.",
 	)
-	addBool(
-		"i", "ignore", &cfg.IgnoreWildcard, false,
+	flag.BoolVarP(
+		&cfg.IgnoreWildcard,
+		"ignore",
+		"i",
+		false,
 		"Keep brute forcing even when wildcards exist.",
 	)
-	addBool(
-		"s", "spf", &cfg.DoSPF, false,
+	flag.BoolVarP(
+		&cfg.DoSPF,
+		"spf",
+		"s",
+		false,
 		"Reverse ranges seen in SPF during std scans.",
 	)
-	addBool(
-		"z", "zone", &cfg.DoZoneWalk, false,
+	flag.BoolVarP(
+		&cfg.DoZoneWalk,
+		"zone",
+		"z",
+		false,
 		"Attempt DNSSEC NSEC walk during std scans.",
 	)
-	addBool(
-		"q", "caa", &cfg.DoCAA, false,
+	flag.BoolVarP(
+		&cfg.DoCAA,
+		"caa",
+		"q",
+		false,
 		"Query CAA records during std scans.",
 	)
-	addBool(
-		"c", "cache", &cfg.DoCacheSnoop, false,
+	flag.BoolVarP(
+		&cfg.DoCacheSnoop,
+		"cache",
+		"c",
+		false,
 		"Check NS caches using test/snoop.txt.",
 	)
-	addBool(
-		"k", "crt", &cfg.DoCRT, false,
+	flag.BoolVarP(
+		&cfg.DoCRT,
+		"crt",
+		"k",
+		false,
 		"Pull hostnames from crt.sh during std scans.",
 	)
-	addBool(
-		"a", "axfr", &cfg.DoAXFR, false,
+	flag.BoolVarP(
+		&cfg.DoAXFR,
+		"axfr",
+		"a",
+		false,
 		"Try zone transfer as part of std scans.",
 	)
-	addBool(
-		"C", "no-color", &cfg.NoColor, false,
+	flag.BoolVarP(
+		&cfg.NoColor,
+		"no-color",
+		"C",
+		false,
 		"Disable ANSI colors in output.",
 	)
 
-	addInt(
-		"T", "threads", &cfg.ThreadCount, 20,
+	flag.IntVarP(
+		&cfg.ThreadCount,
+		"threads",
+		"T",
+		20,
 		"Concurrent lookups to perform.",
 	)
-	addFloat(
-		"w", "timeout", &cfg.TimeoutSeconds, 5.0,
+	flag.Float64VarP(
+		&cfg.TimeoutSeconds,
+		"timeout",
+		"w",
+		5.0,
 		"Per-query timeout in seconds.",
 	)
-}
-
-func addString(
-	shortName string,
-	longName string,
-	dest *string,
-	def string,
-	usage string,
-) {
-	flag.StringVarP(dest, longName, shortName, def, usage)
-}
-
-func addBool(
-	shortName string,
-	longName string,
-	dest *bool,
-	def bool,
-	usage string,
-) {
-	flag.BoolVarP(dest, longName, shortName, def, usage)
-}
-
-func addInt(
-	shortName string,
-	longName string,
-	dest *int,
-	def int,
-	usage string,
-) {
-	flag.IntVarP(dest, longName, shortName, def, usage)
-}
-
-func addFloat(
-	shortName string,
-	longName string,
-	dest *float64,
-	def float64,
-	usage string,
-) {
-	flag.Float64VarP(dest, longName, shortName, def, usage)
 }
 
 var singleDashLong = map[string]struct{}{
