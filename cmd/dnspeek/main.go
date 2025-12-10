@@ -12,6 +12,30 @@ import (
 	core "dnspeek/internal"
 )
 
+const usageText = `usage: dnspeek -d <name> [-acfikpqsz] [-r <cidr|start-end>]
+  [-t <type>] [-n <servers>] [-D <file>] [-T <num>] [-w <seconds>] [-C]
+
+Flags (short, long, and -long aliases):
+	-acfikpqsz	Bundle bools in sorted order.
+	-d, -domain, --domain	Target domain (required for most scans).
+	-r, -range	CIDR or start-end for reverse lookups.
+	-t, -type	std|brt|srv|tld|rvl|axfr|cache|zonewalk.
+	-n, -ns		Comma list of resolvers.
+	-D, -dict	Wordlist for brute force.
+	-T, -threads	Concurrency level.
+	-p, -tcp	Force TCP.
+	-f, -wildcard	Drop wildcard IPs during brute force.
+	-i, -ignore	Continue brute force when wildcards exist.
+	-s, -spf	Reverse SPF ranges during std scans.
+	-z, -zone	Attempt DNSSEC NSEC walk during std scans.
+	-q, -caa	Query CAA records during std scans.
+	-c, -cache	Run cache snooping.
+	-k, -crt	Scrape crt.sh during std scans.
+	-a, -axfr	Try zone transfer in std scans.
+	-w, -timeout	Per-query timeout in seconds.
+	-C, -no-color	Disable ANSI colors.
+`
+
 func main() {
 	cfg := core.Config{}
 
@@ -135,39 +159,7 @@ func main() {
 	}
 
 	flag.Usage = func() {
-		fmt.Println(
-			"usage: dnspeek -d <name> [-acfikpqsz] " +
-				"[-r <cidr|start-end>] [-t <type>] [-n <servers>]\n  " +
-				"[-D <file>] [-T <num>] [-w <seconds>] [-C]",
-		)
-		fmt.Println(
-			"\nFlags (short, long, and -long aliases):",
-		)
-		fmt.Println(
-			"\t-acfikpqsz\tBundle bools in sorted order.",
-		)
-		fmt.Println(
-			"\t-d, -domain, --domain\tTarget domain " +
-				"(required for most scans).",
-		)
-		fmt.Println("\t-r, -range\tCIDR or start-end for reverse lookups.")
-		fmt.Println("\t-t, -type\tstd|brt|srv|tld|rvl|axfr|cache|zonewalk.")
-		fmt.Println("\t-n, -ns\t\tComma list of resolvers.")
-		fmt.Println("\t-D, -dict\tWordlist for brute force.")
-		fmt.Println("\t-T, -threads\tConcurrency level.")
-		fmt.Println("\t-p, -tcp\tForce TCP.")
-		fmt.Println("\t-f, -wildcard\tDrop wildcard IPs during brute force.")
-		fmt.Println(
-			"\t-i, -ignore\tContinue brute force when wildcards exist.",
-		)
-		fmt.Println("\t-s, -spf\tReverse SPF ranges during std scans.")
-		fmt.Println("\t-z, -zone\tAttempt DNSSEC NSEC walk during std scans.")
-		fmt.Println("\t-q, -caa\tQuery CAA records during std scans.")
-		fmt.Println("\t-c, -cache\tRun cache snooping.")
-		fmt.Println("\t-k, -crt\tScrape crt.sh during std scans.")
-		fmt.Println("\t-a, -axfr\tTry zone transfer in std scans.")
-		fmt.Println("\t-w, -timeout\tPer-query timeout in seconds.")
-		fmt.Println("\t-C, -no-color\tDisable ANSI colors.")
+		fmt.Print(usageText)
 	}
 
 	err := flag.CommandLine.Parse(
