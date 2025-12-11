@@ -17,7 +17,7 @@ tidy:
 	go mod tidy
 
 build:
-	go build -o dnspeek ./cmd/dnspeek
+	go build -trimpath -ldflags "-s -w" -o dnspeek ./cmd/dnspeek
 
 run:
 	go run ./cmd/dnspeek
