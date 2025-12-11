@@ -52,6 +52,14 @@ go mod download
 go build -o dnspeek ./cmd/dnspeek
 ```
 
+### Containers
+
+To compile and run the binary inside a [Docker] image, do:
+
+```sh
+docker build .
+```
+
 ## Usage
 
 Command flags and key options:
@@ -149,3 +157,4 @@ See the [LICENSE](LICENSE) file for details.
 
 [dnspeek]: https://github.com/Neved4/dnspeek
 [dnsrecon]: https://github.com/darkoperator/dnsrecon
+[Docker]: https://www.docker.com
