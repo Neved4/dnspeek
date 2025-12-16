@@ -1,6 +1,8 @@
 .POSIX:
 
-.PHONY: all fmt vet test tidy build run clean
+.PHONY: all build clean fmt run test tidy vet
+
+progName = dnspeek
 
 all: fmt vet test
 
@@ -17,10 +19,10 @@ tidy:
 	go mod tidy
 
 build:
-	go build -trimpath -ldflags "-s -w" -o dnspeek ./cmd/dnspeek
+	go build -trimpath -ldflags "-s -w" -o $(progName) ./cmd/$(progName)
 
 run:
-	go run ./cmd/dnspeek
+	go run ./cmd/$(progName)
 
 clean:
-	rm -f dnspeek
+	rm -f $(progName)
